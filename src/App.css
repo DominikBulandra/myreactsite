@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  background-color: #e7e7e7;
+  color: #4a4950;
+  height: 100%;
 }
 
 .App-logo {
@@ -7,9 +10,10 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #ffffff;
+  min-height: 10vh;
   display: flex;
+  box-shadow: 0 5px 20px -10px rgb(60, 61, 110);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -19,4 +23,31 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.container {
+  height: 100vh;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: #4a4950;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111111;
 }
