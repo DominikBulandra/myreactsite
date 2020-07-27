@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Spring} from 'react-spring/renderprops'
 
 let lastScrollY = 0;
 let ticking = false;
@@ -47,7 +48,11 @@ class Project extends Component {
         backgroundColor: "yellow",
       };
     return (
-        <div  ref={this.navRef} className="container" style={{backgroundColor: this.props.color,position: "relative",maxWidth: '100%'}}>
+      <Spring
+  from={{ opacity: 0, marginTop: -500 }}
+  to={{ opacity: 1, marginTop: 0 }}
+  config={{duration:1000}}>
+  {props => <div style={props}>      <div  ref={this.navRef} className="container" style={{backgroundColor: this.props.color,position: "relative",maxWidth: '100%'}}>
             <div className="row justify-content-md-center">
        <div className="col-md-12 " style={{height: 200}}>
        <h1>{this.props.title}</h1>
@@ -55,7 +60,9 @@ class Project extends Component {
     
  </div>
  </div>
- </div>
+ </div></div>}
+</Spring>
+  
     );
   }
 }

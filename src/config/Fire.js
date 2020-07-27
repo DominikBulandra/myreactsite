@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import Rebase from 're-base';
-
+import 'firebase/storage';
 
 const config = {
     apiKey: "AIzaSyCxsv4y868zkAL-d13UqdeiaKs7MRSGpK8",
@@ -13,7 +13,9 @@ const config = {
     measurementId: "G-074D69LJ96"
   };
   // Initialize Firebase
+  
   const fire = firebase.initializeApp(config)
   const base = Rebase.createClass(fire.database())
   const firestore =firebase.database();
-  export  { fire, base, firestore}
+  const storage = fire.storage()
+  export  {storage, fire, base, firestore}

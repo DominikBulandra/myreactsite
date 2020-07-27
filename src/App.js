@@ -12,8 +12,8 @@ import About from './about';
 import Chat from './Chat';
 import Admin from './Admin';
 import { connect } from "react-redux";
-import { postsFetched,getAllStatPostsAction } from "./config/actions/index";
-import {fire  , base}  from './config/Fire';
+import { postsFetched,getAllStatPostsAction,getAllStatPostsImages } from "./config/actions/index";
+import {fire  , base, storage}  from './config/Fire';
 
 export class App extends React.Component {
   constructor(props) {
@@ -22,6 +22,7 @@ export class App extends React.Component {
     this.onSync = this.onSync.bind(this);
     this.onPush = this.onPush.bind(this);
     this.onAction= this.onAction.bind(this);
+    this.onImage=this.onImage.bind(this);
     this.state = {
       articles: [
         { title: "React Redux Tutorial for Beginners", id: 1 },
@@ -29,7 +30,8 @@ export class App extends React.Component {
       ],
       temporary: [],
       a: [],
-      ref: []
+      ref: [],
+      ref2: []
     };
   }
 
@@ -43,14 +45,56 @@ export class App extends React.Component {
    //await this.sendState();
   this.onSync();
   this.onAction();
- console.log(this.props);
+ //console.log(this.props);
  
     
   }
+  ref2(temp){
+    this.setState({
+      ref2: temp
+      
+  });
+}
+  
   
   onAction(){
     this.props.getAllStatPostsAction();
+    var temp =[];
+    var storageRef = storage.ref("images");
+   
+    storageRef.list().then(function(result) {
+      console.log(result.items);
+      result.prefixes.forEach(function(imageRef) {
+        
+       console.log(imageRef);
+        // And finally display them
+        imageRef.list().then(function(result2) {
+         
+        result2.items.forEach(function(imageRef2) {
+          imageRef2.getDownloadURL().then(function(url) {
+            console.log(url);
+            temp.push(url);
+        });
+      });
+      });
+      //console.log(imageRef.getDownloadURL());
+     
+        //this.onImage(imageRef);
+        //console.log(imageRef.getDownloadURL());
+      });
+    }).catch(function(error) {
+      // Handle any errors
+    });
+
+    this.ref2(temp);
+
+        console.log(this.state.ref2);
+   // const storageRef = storage.ref('/images/1576580835000').getDownloadURL();
+    this.props.getAllStatPostsImages(temp);
+
+    
     console.log(this.props.posts2);
+    console.log(this.props.images);
   }
   async sendState(){
     this.postsRef =base.syncState('posts',{
@@ -60,10 +104,26 @@ export class App extends React.Component {
  
   //this.props.postsFetched(this.state.temporary);
 
-  console.log(this.state.temporary);
+  //console.log(this.state.temporary);
   
   }
-  
+  onImage(imageRef) {
+    console.log(imageRef);
+    var fileURLs = [];
+    imageRef.getDownloadURL().then(function(url) {
+      // TODO: Display the image on the UI
+      console.log(url);
+    //   this.setState({
+    //     ref2: [
+    //         ...this.state.ref2,
+    //         url
+    //     ]
+    // });
+    }).catch(function(error) {
+      // Handle any errors
+    });
+    console.log(this.state.ref2);
+  };
  async componentDidUpdate(){
    
    // console.log(this.props.posts);
@@ -185,9 +245,10 @@ const mapStateToProps = (state) => {
   
   return {
     posts2: state.allposts.statPostState,
-    posts: state.posts
+    posts: state.posts,
+    images: state.allposts.statPostImages
   }
 };
-const mapDispatchToProps = { postsFetched,getAllStatPostsAction };
+const mapDispatchToProps = { postsFetched,getAllStatPostsAction,getAllStatPostsImages };
 
 export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { postsFetched } from "./config/actions/index";
 import { connect } from "react-redux";
-import {fire  , base, firestore}  from './config/Fire';
+import {storage, fire  , base, firestore}  from './config/Fire';
 
 export class Edit extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ export class Edit extends Component {
    // this.handleChange = this.handleChange.bind(this);
     this.state = {
       file:'',
+      url:'',
       imagePreviewUrl: '',
         posts: {},
         currentUser: null,
@@ -19,6 +20,7 @@ export class Edit extends Component {
         color:  this.props.location.color
       };
 }
+
 componentWillMount(){
   this.postsRef = base.syncState('posts',{
       context: this,
@@ -26,6 +28,12 @@ componentWillMount(){
   });
   
   
+}
+handleImageAsFile = (e) => {
+  console.log(e.target.files[0]);
+  const image = e.target.files[0]
+ this.setState({file: image})
+ console.log(this.state.file);
 }
 componentDidMount(){
  
@@ -82,6 +90,7 @@ update(e){
   const color = this.state.color;
   //let userRef = this.firestore.ref('posts/' + this.props.location.id);
   const databaseRef = fire.database().ref('posts/'+this.props.location.id);
+  const uploadTask = storage.ref(`/images/${this.props.location.id}`).put(this.state.file);
 // this is to get the stat-cards table from firebase
 const statCardsRef = databaseRef.update({
   
@@ -92,7 +101,7 @@ const statCardsRef = databaseRef.update({
   console.log('updated!');
 }];
  console.log(statCardsRef);
-
+ console.log("obrazek: "+uploadTask);
   // firestore.Collection('posts').oc(this.props.location.id).update({
   //   title: title,
   //   text: text,
@@ -150,7 +159,7 @@ componentDidUpdate(){
         <div className="form-group">
         <input className="fileInput" 
             type="file" 
-            onChange={(e)=>this._handleImageChange(e)} />
+            onChange={this.handleImageAsFile} />
             </div>
         <button type="submit" onClick={this.login} className="btn btn-primary">Usuń</button>
         <div className="imgPreview">

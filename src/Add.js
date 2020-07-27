@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { postsFetched } from "./config/actions/index";
 import { connect } from "react-redux";
 import {fire  , base}  from './config/Fire';
-
+import { uuid } from 'uuidv4';
 export class Add extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +60,7 @@ handleChangeColor(e){
 add(e){
   e.preventDefault();
   const posts = {...this.state.posts};
-  const id = Date.now();
+  const id = uuid();
   const title = this.state.title;
   const text = this.state.text;
   const color = this.state.color;
